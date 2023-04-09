@@ -8,7 +8,7 @@ class UserModel {
   String? bio;
   String? cover;
 
-  UserModel({this.uId, this.email, this.name, this.phone,this.isEmailVerified,this.image,this.bio,this.cover});
+  UserModel({this.uId, this.email,  this.name,  this.phone,this.isEmailVerified,this.image,this.bio,this.cover});
 
 
   UserModel.fromJson(Map<String, dynamic> json) {

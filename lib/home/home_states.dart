@@ -45,3 +45,5 @@ class CreatePostErrorState extends HomeStates{}
 
 class PostImagePickerSuccessState extends HomeStates{}
 class PostImagePickerErrorState extends HomeStates{}
+
+class SocialRemovePostImageState extends HomeStates{}

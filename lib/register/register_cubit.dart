@@ -7,7 +7,7 @@ import 'package:socialapp/model/user_data_model.dart';
 
 
 class RegisterCubit extends Cubit<RegisterStates> {
-  RegisterCubit() : super(RegisterInitialState());
+  RegisterCubit(): super(RegisterInitialState());
 
   static RegisterCubit get(context) => BlocProvider.of(context);
 
@@ -37,7 +37,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
  ///**************************************
   UserModel? model;
   //I changed this
-  void userCreate({
+  void userCreate ({
     required String email,
     required String phone,
     required String name,

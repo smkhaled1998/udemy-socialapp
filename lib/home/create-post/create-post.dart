@@ -6,7 +6,7 @@ import 'package:socialapp/home/home_states.dart';
 import '../../shared/styles/icon-broken.dart';
 
 class CreatePost extends StatelessWidget {
-var textController=TextEditingController();
+var postController=TextEditingController();
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeStates>(
@@ -16,30 +16,32 @@ var textController=TextEditingController();
           return Scaffold(
             appBar: AppBar(
               title: Text(
-                "Add Post",
-                style: TextStyle(color: Colors.black),
+                "Create Post",
+                style: Theme.of(context).textTheme.headline6,
               ),
               leading: IconButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                icon: Icon(
+                icon: const Icon(
                   IconBroken.Arrow___Left_3,
                   color: Colors.black,
                 ),
               ),
               actions: [TextButton(onPressed: () {
+
+
                 var now =DateTime.now();
                 if(cubit.postImage==null) {
-                  cubit.createNewPost(
+                  cubit.createPost(
                       date: now.toString(),
-                      post: textController.text);
+                      post: postController.text);
                 } else {
-                  cubit.uploadPostImage(
+                  cubit.storePostImage(
                     date:  now.toString(),
-                    post: textController.text);
+                    post: postController.text);
                 }
-              }, child: Text("POST"))],
+              }, child: const Text("POST"))],
             ),
             body: Padding(
               padding: const EdgeInsets.all(15.0),
@@ -50,8 +52,9 @@ var textController=TextEditingController();
                     children: [
                       CircleAvatar(
                         backgroundImage: NetworkImage("${cubit.model!.image}"),
+
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       Text(
@@ -60,34 +63,72 @@ var textController=TextEditingController();
                       )
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Expanded(
                       child: TextFormField(
-                        controller: textController,
-                    decoration: InputDecoration(
+                        controller: postController,
+                    decoration: const InputDecoration(
                       hintText: "What is in your mind...",
                       border: InputBorder.none
                     ),
                   )),
+                   if(cubit.postImage!=null)
+                       Stack(
+                         alignment: AlignmentDirectional.topEnd,
+                         children: [
+                           Container(
+                             height: 160,
+                             width: double.infinity,
+                             decoration: BoxDecoration(
+                                 borderRadius: BorderRadius.all(
+                                     Radius.circular(20)
+                                 ),
+                                 image: DecorationImage(
+                                   image: FileImage(cubit.postImage!) ,
+
+                                 )
+                             ),
+                           ),
+                           Padding(
+                             padding: const EdgeInsets.all(8.0),
+                             child: CircleAvatar(
+                                 radius: 20,
+                                 child: IconButton(
+                                     onPressed: (){
+                                       cubit.removePostImage;
+                                       print(cubit.postImage);
+                                     },
+                                     icon:Icon(Icons.close)
+                                 )
+                             ),
+                           )
+                         ],
+                       ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      TextButton(
-                          onPressed: () {},
-                          child: Row(
-                            children: [
-                              Icon((IconBroken.Image)),
-                              Text("add photo")
-                            ],
-                          )),
-                      Spacer(),
-                      TextButton(
-                          onPressed: () {},
-                          child: Row(
-                            children: [Text("#tags")],
-                          )),
+                      Expanded(
+                        child: TextButton(
+                            onPressed: () {
+                              cubit.pickPostImage();
+                            },
+                            child: Row(
+                              children: [
+                                const Icon((IconBroken.Image)),
+                                const Text("add photo")
+                              ],
+                            )),
+                      ),
+                      Expanded(
+                        child: TextButton(
+                            onPressed: () {},
+                            child: const Text("#tags")),
+                      ),
                     ],
                   )
                 ],

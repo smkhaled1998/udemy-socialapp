@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -27,7 +26,7 @@ class HomeCubit extends Cubit<HomeStates> {
 /// **********IndexBottomNav********************/
   int currentIndex = 0;
   List<Widget> screens = [
-    FeedsScreen(),
+     FeedsScreen(),
     ChatsScreen(),
     CreatePost(),
     UsersScreen(),
@@ -35,8 +34,8 @@ class HomeCubit extends Cubit<HomeStates> {
 
   ];
   List<String> titles = ["News", "Chats","", "Users", "Settings"];
-  void changeBottomNav(index) {
 
+  void changeBottomNav(index) {
     if(index==2) {
       emit (NewPostState());
     } else {
@@ -49,7 +48,6 @@ class HomeCubit extends Cubit<HomeStates> {
   void getUserData() {
     emit(HomeGetDataLoadingState());
     FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
-
       model = UserModel.fromJson(value.data()!);
       emit(HomeGetDataSuccessState());
     }).catchError((error) {
@@ -145,7 +143,7 @@ class HomeCubit extends Cubit<HomeStates> {
       emit(HomeUpdateImageErrorState());
     });
   }
-  /***********************************************************/
+  /// *********************************************************/
   void uploadCoverImage({
     required String name,
     required String phone,
@@ -172,47 +170,70 @@ class HomeCubit extends Cubit<HomeStates> {
     emit(HomeUpdateCoverErrorState());
   }
 ///**************************************************************
+//
+// PostModel? postModel;
+// void createPost(
+//   {
+//   required String post,
+//   required String date,
+//   String? image
+// }
+//     ){
+//   emit(CreatePostLoadingState());
+//   postModel=PostModel(
+//     post: post,
+//     date: date,
+//     uId: model!.uId,
+//     postImage: image?? ""
+//   );
+//   FirebaseFirestore.instance.collection("post").doc('1')
+//       .set(postModel!.toMap())
+//       .then((value) {
+//         emit(CreatePostSuccessState());
+//   }).catchError((error){
+//     emit(CreatePostErrorState());
+//   });
+// }
+//
+//   File? postImage;
+//   Future pickPostImage()async{
+//    final  pickedFile =await picker.pickImage(source: ImageSource.gallery);
+//    if(pickedFile!=null){
+//      postImage=File(pickedFile.path);
+//      emit(PostImagePickerSuccessState());
+//    }else {
+//       print('No Image Selected');
+//       emit(PostImagePickerErrorState());
+//     }
+//   }
+//   File? postImage;
+//   Future getPostImage() async {
+//     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+//     if (pickedFile != null) {
+//       postImage = File(pickedFile.path);
+//       emit(PostImagePickerSuccessState());
+//     } else {
+//       print('No Image Selected');
+//       emit(PostImagePickerErrorState());
+//     }
+//   }
+//
+
+
   File? postImage;
-  Future getPostImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      postImage = File(pickedFile.path);
-      emit(PostImagePickerSuccessState());
-    } else {
-      print('No Image Selected');
+  Future pickPostImage()async{
+    final pickedFile =await picker.pickImage(source: ImageSource.gallery);
+    if(pickedFile!=null){
+      postImage=File(pickedFile.path);
+            emit(PostImagePickerSuccessState());
+    }else{
+            print('No Image Selected');
       emit(PostImagePickerErrorState());
     }
   }
-  void createPost({
-    required String date,
-    required String post,
-    String? postImage,
-
-  }) {
-    PostModel userModel = PostModel(
-        name: model!.name,
-        uId: uId,
-        image:model!.image,
-date: date,
-      post: post,
-      postImage: postImage??""
-       );
-
-    FirebaseFirestore.instance
-        .collection('posts')
-        .doc(userModel.uId)
-        .update(userModel.toMap())
-        .then((value) {
-      getUserData();
-    })
-        .catchError((error) {
-      emit(HomeUserUpdateErrorState());
-    });
 
 
-  }
-
-  void uploadPostImage({
+  void storePostImage({
     required String date,
     required String post,
     }
@@ -220,11 +241,11 @@ date: date,
 
     firebase_storage.FirebaseStorage.instance
         .ref()
-        .child("users/${Uri.file(postImage!.path).pathSegments.last}")
+        .child("posts/${Uri.file(postImage!.path).pathSegments.last}")
         .putFile(postImage!)
         .then((value) {
       value.ref.getDownloadURL().then((value) {
-       createNewPost(
+       createPost(
            date: date,
            post: post,
            postImage: value);
@@ -240,34 +261,36 @@ date: date,
   }
 
 
-void createNewPost({
-  required String date,
-  required String post,
-  String? postImage,
-}){
 
+  ///***************
+  void createPost({
+    required String date,
+    required String post,
+    String? postImage,
 
-    PostModel postModel =PostModel(
-      image: model!.image,
-       name: model!.name,
-       uId: model!.uId,
-       post: post,
-       postImage: postImage??"",
-       date: date,
-
+  }) {
+    PostModel postModel= PostModel(
+        uId: uId,
+        date: date,
+        post: post,
+        postImage: postImage??""
     );
-    emit(CreatePostLoadingState());
+
     FirebaseFirestore.instance
         .collection('posts')
-        .doc('1')
-        .set(postModel.toMap())
+        .add(postModel.toMap())
         .then((value) {
-          emit(CreatePostSuccessState());
+      getUserData();
     })
-        .catchError((error){
-          emit(CreatePostErrorState());
+        .catchError((error) {
+          print(error.toString());
+      emit(HomeUserUpdateErrorState());
     });
-}
 
 
+  }
+  void removePostImage(){
+    postImage=null;
+    emit(SocialRemovePostImageState());
+  }
 }

@@ -6,11 +6,13 @@ import 'package:socialapp/shared/bloc_observer.dart';
 import 'package:socialapp/shared/cache_helper.dart';
 import 'package:socialapp/shared/styles/styles.dart';
 
+
 import 'home/home_layout.dart';
 import 'login/login-screen.dart';
 import 'shared/components.dart';
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = MyBlocObserver();
   await Firebase.initializeApp();
@@ -39,7 +41,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: lightMode,
-          home: startWidget),
+
+          home: startWidget
+      ),
     );
   }
 }

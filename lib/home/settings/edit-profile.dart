@@ -17,9 +17,9 @@ class EditProfile extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
-        nameController.text=cubit.model!.name!;
-        bioController.text=cubit.model!.bio!;
-        phoneController.text=cubit.model!.phone!;
+        // nameController.text=cubit.model!.name!;
+        // bioController.text=cubit.model!.bio!;
+        // phoneController.text=cubit.model!.phone!;
         return Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.white,

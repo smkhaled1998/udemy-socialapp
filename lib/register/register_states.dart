@@ -16,3 +16,4 @@ class RegisterCreateUserErrorState extends RegisterStates{
   final String error;
   RegisterCreateUserErrorState(this.error);
 }
+//state

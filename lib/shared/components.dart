@@ -5,6 +5,7 @@ import 'package:socialapp/shared/cache_helper.dart';
 
 void navigateTo(context,page)=> Navigator.push(context, MaterialPageRoute(builder:(context)=>page));
 void navigateAndFinish(context,page)=>Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>page), (route) => false);
+
 void showToast ({
   required String text,
   required ToastStates state

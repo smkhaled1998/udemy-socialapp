@@ -11,10 +11,12 @@ import '../shared/components.dart';
 import 'login_cubit.dart';
 import 'login_states.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatelessWidget  {
   var emailController= TextEditingController();
   var passController= TextEditingController();
   var formKey=GlobalKey<FormState>();
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +90,7 @@ class LoginScreen extends StatelessWidget {
                               border: OutlineInputBorder()
                           ),
                         ),
-                        SizedBox(height: 15,),
+                        const SizedBox(height: 15,),
                         ConditionalBuilder(
                           condition:state is! LoginLoadingState ,
                           builder: (context)=> Container(
